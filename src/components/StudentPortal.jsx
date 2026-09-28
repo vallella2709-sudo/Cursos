@@ -41,7 +41,6 @@ export default function StudentPortal({ onBack }) {
 
   return (
     <div className="flex-1 flex flex-col md:flex-row min-h-screen bg-[#09090b]">
-      {/* Sidebar Desktop */}
       <aside className="hidden md:flex flex-col w-64 border-r border-zinc-800/80 bg-zinc-950/40 backdrop-blur-md p-6 justify-between">
         <div>
           <div className="flex items-center gap-3 mb-10 px-2">
@@ -81,7 +80,6 @@ export default function StudentPortal({ onBack }) {
         </button>
       </aside>
 
-      {/* Header Mobile */}
       <div className="md:hidden flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-950/80 sticky top-0 z-50 backdrop-blur-md">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white text-sm">
@@ -97,7 +95,6 @@ export default function StudentPortal({ onBack }) {
         </button>
       </div>
 
-      {/* Menú Desplegable Mobile */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 top-[65px] bg-zinc-950/95 backdrop-blur-2xl z-40 p-6 flex flex-col justify-between animate-fadeIn">
           <nav className="space-y-2">
@@ -127,7 +124,6 @@ export default function StudentPortal({ onBack }) {
         </div>
       )}
 
-      {/* Contenido Dinámico */}
       <main className="flex-1 overflow-y-auto p-6 md:p-10 max-w-5xl mx-auto w-full">
         {activeTab === 'home' && <StudentHome onNavigateToRegister={() => setActiveTab('register')} />}
         {activeTab === 'register' && (

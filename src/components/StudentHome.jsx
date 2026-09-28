@@ -25,7 +25,6 @@ export default function StudentHome({ onNavigateToRegister }) {
 
   return (
     <div className="space-y-12 animate-fadeIn">
-      {/* Banner de Bienvenida */}
       <div className="relative bg-gradient-to-br from-indigo-950/40 via-zinc-900/40 to-zinc-900/80 border border-zinc-800/80 rounded-3xl p-8 md:p-12 overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
         
@@ -54,7 +53,6 @@ export default function StudentHome({ onNavigateToRegister }) {
         </div>
       </div>
 
-      {/* Grid de Cursos */}
       <div>
         <h2 className="text-xl font-bold text-white mb-6">Cursos Disponibles</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -36,7 +36,6 @@ export default function StudentInfo() {
         <p className="text-xs text-zinc-400 mt-1">Selecciona un curso para conocer al instructor, su CV y descargar el pensum.</p>
       </div>
 
-      {/* Tabs Selector de Cursos */}
       <div className="flex flex-wrap gap-2">
         {coursesList.map((c) => (
           <button
@@ -57,7 +56,6 @@ export default function StudentInfo() {
         <div className="p-12 text-center text-zinc-500 text-sm">Cargando información del curso...</div>
       ) : courseInfo ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Tarjeta del Instructor */}
           <div className="md:col-span-1 bg-zinc-900/60 border border-zinc-800 rounded-3xl p-6 shadow-xl flex flex-col items-center text-center">
             <div className="w-24 h-24 rounded-2xl bg-zinc-800 overflow-hidden mb-4 border border-zinc-700/50 flex items-center justify-center">
               {courseInfo.instructor_photo_url ? (
@@ -86,7 +84,6 @@ export default function StudentInfo() {
             )}
           </div>
 
-          {/* Tarjeta de Pensum / Detalles */}
           <div className="md:col-span-2 bg-zinc-900/60 border border-zinc-800 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 text-indigo-400 mb-3">
@@ -117,7 +114,7 @@ export default function StudentInfo() {
         </div>
       ) : (
         <div className="p-12 text-center bg-zinc-900/40 border border-zinc-800 rounded-3xl text-zinc-400 text-sm">
-          No hay información registrada para este curso en Supabase todavía. (El admin puede configurarla).
+          No hay información registrada para este curso en Supabase todavía.
         </div>
       )}
     </div>
