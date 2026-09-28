@@ -15,7 +15,7 @@ export default function App() {
       </main>
       
       <footer className="py-6 text-center text-xs text-zinc-600 border-t border-zinc-900">
-        Plataforma Académica • Diseñado con enfoque minimalista &bull; {new Date().getFullYear()}
+        Plataforma Académica • Diseñado por JAFL &bull; {new Date().getFullYear()}
       </footer>
     </div>
   );
