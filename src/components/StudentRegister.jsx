@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import confetti from 'canvas-confetti';
-import { CheckCircle2, Send, AlertCircle, Clock, UserCheck, ChevronRight } from 'lucide-react';
+import { CheckCircle2, Send, AlertCircle, Clock, UserCheck, ChevronRight, MessageCircle } from 'lucide-react';
 
 export default function StudentRegister({ userInscribed, myEnrollments, onSuccess, onViewInfo }) {
   const [formData, setFormData] = useState({
@@ -18,6 +18,7 @@ export default function StudentRegister({ userInscribed, myEnrollments, onSucces
 
   const [loading, setLoading] = useState(false);
   const [successData, setSuccessData] = useState(false);
+  const [lastSubmittedData, setLastSubmittedData] = useState(null);
 
   const isPostProduction = formData.course.includes('Postproducción');
 
@@ -51,6 +52,7 @@ export default function StudentRegister({ userInscribed, myEnrollments, onSucces
         spread: 80,
         origin: { y: 0.6 }
       });
+      setLastSubmittedData(payload);
       setSuccessData(true);
       onSuccess(formData.phone);
     } else {
@@ -58,18 +60,40 @@ export default function StudentRegister({ userInscribed, myEnrollments, onSucces
     }
   };
 
+  // Generador de enlace WhatsApp con mensaje predeterminado
+  const getWhatsAppLink = (data) => {
+    const phoneNum = "584142545533";
+    const text = `¡Hola! Me he preinscrito en CursosJF.\n\n` +
+      `• Nombre: ${data.full_name}\n` +
+      `• Curso: ${data.course}\n` +
+      `• Teléfono: ${data.phone}\n` +
+      `• Total a pagar: $${data.total_price}\n` +
+      `${data.referral ? `• Referido por: ${data.referral}\n` : ''}` +
+      `Adjunto por aquí la confirmación de mi pago para completar la inscripción. ¡Gracias!`;
+    
+    return `https://wa.me/${phoneNum}?text=${encodeURIComponent(text)}`;
+  };
+
   if (userInscribed && !successData) {
     return (
       <div className="space-y-6 animate-fadeIn">
         <div className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-8 shadow-2xl">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-3 bg-indigo-500/10 text-indigo-400 rounded-2xl">
-              <UserCheck size={24} />
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-indigo-500/10 text-indigo-400 rounded-2xl">
+                <UserCheck size={24} />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">Seguimiento de Estado</h2>
+                <p className="text-xs text-zinc-400">Tus inscripciones registradas en CursosJF</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-white">Seguimiento de Estado</h2>
-              <p className="text-xs text-zinc-400">Tus inscripciones registradas en el sistema</p>
-            </div>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="text-xs text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
+            >
+              Actualizar Estado
+            </button>
           </div>
 
           <div className="space-y-4">
@@ -82,7 +106,7 @@ export default function StudentRegister({ userInscribed, myEnrollments, onSucces
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${
+                  <span className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 ${
                     item.status === 'Inscrito' 
                       ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
                       : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
@@ -108,7 +132,7 @@ export default function StudentRegister({ userInscribed, myEnrollments, onSucces
     );
   }
 
-  if (successData) {
+  if (successData && lastSubmittedData) {
     return (
       <div className="max-w-xl mx-auto text-center bg-zinc-900/80 border border-zinc-800 rounded-3xl p-8 md:p-12 shadow-2xl animate-fadeIn">
         <div className="w-20 h-20 bg-emerald-500/10 text-emerald-400 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-emerald-500/20 shadow-xl">
@@ -119,22 +143,32 @@ export default function StudentRegister({ userInscribed, myEnrollments, onSucces
           ¡Felicidades has sido preinscrito!
         </h2>
         <p className="text-zinc-300 text-sm leading-relaxed mb-6">
-          Estamos confirmando tu pago. Una vez confirmado se enviará un mensaje de texto confirmando el proceso de inscripción y la fecha del curso: <strong className="text-indigo-400">sábado 3 de octubre de 1pm a 5pm</strong>.
+          Para confirmar tu pago y completar el proceso de inscripción, haz clic en el botón de abajo para enviar tus datos directamente por WhatsApp. Fecha del curso: <strong className="text-indigo-400">sábado 3 de octubre de 1pm al 5pm</strong>.
         </p>
 
-        <div className="p-4 bg-zinc-950/60 border border-zinc-800 rounded-2xl text-xs text-zinc-400 space-y-2 mb-8 text-left">
+        {/* Botón WhatsApp API */}
+        <a
+          href={getWhatsAppLink(lastSubmittedData)}
+          target="_blank"
+          rel="noreferrer"
+          className="w-full mb-4 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm rounded-2xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <MessageCircle size={20} /> Enviar comprobante por WhatsApp
+        </a>
+
+        <div className="p-4 bg-zinc-950/60 border border-zinc-800 rounded-2xl text-xs text-zinc-400 space-y-2 mb-6 text-left">
           <p className="flex items-center gap-2 text-amber-400 font-medium">
             <AlertCircle size={15} /> Nota Importante:
           </p>
           <p>Es obligatorio traer tu laptop con los programas instalados.</p>
-          <p>Dudas al grupo de WhatsApp o al <strong className="text-zinc-200">04142545533</strong>.</p>
+          <p>Teléfono de contacto: <strong className="text-zinc-200">04142545533</strong>.</p>
         </div>
 
         <button
           onClick={() => window.location.reload()}
-          className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-2xl transition-all shadow-lg shadow-indigo-600/25 cursor-pointer"
+          className="w-full py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium rounded-2xl transition-all cursor-pointer text-xs"
         >
-          Volver al Inicio
+          Ir a ver mi estado en el portal
         </button>
       </div>
     );
@@ -143,7 +177,7 @@ export default function StudentRegister({ userInscribed, myEnrollments, onSucces
   return (
     <div className="max-w-2xl mx-auto bg-zinc-900/60 border border-zinc-800 rounded-3xl p-6 md:p-10 shadow-2xl animate-fadeIn">
       <div className="mb-8">
-        <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Formulario Oficial</span>
+        <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">CursosJF • Formulario Oficial</span>
         <h2 className="text-2xl font-bold text-white mt-1">Inscripción al Curso</h2>
         <p className="text-xs text-zinc-400 mt-1">Costo base: $10 (O $8 si vienes recomendado).</p>
       </div>
@@ -299,7 +333,7 @@ export default function StudentRegister({ userInscribed, myEnrollments, onSucces
             disabled={loading}
             className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl transition-all shadow-lg shadow-indigo-600/20 disabled:opacity-50 cursor-pointer"
           >
-            {loading ? 'Procesando...' : <>Enviar Inscripción <Send size={16} /></> }
+            {loading ? 'Procesando...' : <>Inscribirme <Send size={16} /></> }
           </button>
         </div>
       </form>
